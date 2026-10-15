@@ -17,6 +17,7 @@ def predict_intent(text):
     predicted_tag = model.classes_[predicted_index]
     confidence = scores[predicted_index]
 
+    # Reject uncertain predictions
     if confidence < THRESHOLD:
         return "UNKNOWN"
 
@@ -39,10 +40,11 @@ while True:
 
     intent = predict_intent(user_input)
 
-    # Get the corresponding reply
+    # Retrieve the reply for the predicted intent,
+    # including UNKNOWN
     response = INTENT_RESPONSES.get(
         intent,
-        "Sorry, I can't quite understand that."
+        INTENT_RESPONSES["UNKNOWN"]
     )
 
     print(f"Intent: {intent}")
