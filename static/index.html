@@ -1,22 +1,69 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Q-TIP | TIP Assistant</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="static\style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/script.js" defer></script>
 </head>
+
 <body>
-  <main class="app">
+  <!-- TIP website mockup is the full-page background -->
+
+  <!-- Floating Q-TIP launcher -->
+  <button
+    id="qtip-launcher"
+    class="qtip-launcher"
+    type="button"
+    aria-label="Open Q-TIP assistant"
+    aria-controls="qtip-window"
+    aria-expanded="false"
+  >
+    Q
+  </button>
+
+  <!-- Floating chatbot window -->
+  <main
+    id="qtip-window"
+    class="app"
+    role="dialog"
+    aria-label="Q-TIP assistant"
+    aria-modal="false"
+    hidden
+  >
     <header class="masthead">
-      <h1 class="logo">Q-TIP</h1>
-      <p class="tagline">Your TIP Assistant</p>
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">Q</div>
+        <div class="brand-text">
+          <h1 class="logo">Q-TIP</h1>
+          <p class="tagline">Your TIP Assistant</p>
+        </div>
+      </div>
+
+      <button
+        id="close-qtip"
+        class="close-btn"
+        type="button"
+        aria-label="Close Q-TIP"
+        title="Close"
+      >
+        &times;
+      </button>
     </header>
 
-    <section id="chat" class="chat" aria-live="polite" aria-label="Conversation">
+    <section
+      id="chat"
+      class="chat"
+      aria-live="polite"
+      aria-label="Conversation"
+    >
       <div class="msg bot">
         <span class="who">Q-TIP</span>
         <p class="bubble">Hello! I'm your TIP assistant. How can I help you?</p>
@@ -25,11 +72,18 @@
 
     <form id="composer" class="composer" autocomplete="off">
       <label for="message" class="sr-only">Your message</label>
-      <input id="message" type="text" placeholder="Ask me something about TIP..." maxlength="500" autofocus>
+
+      <input
+        id="message"
+        name="message"
+        type="text"
+        placeholder="Ask me something about TIP..."
+        maxlength="500"
+        autocomplete="off"
+      >
+
       <button type="submit" id="send">Send</button>
     </form>
   </main>
-
-  <script src="/static/script.js"></script>
 </body>
 </html>

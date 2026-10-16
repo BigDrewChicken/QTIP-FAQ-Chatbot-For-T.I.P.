@@ -1,14 +1,53 @@
-
 const chat = document.getElementById("chat");
 const form = document.getElementById("composer");
 const input = document.getElementById("message");
 const sendBtn = document.getElementById("send");
 
+const launcher = document.getElementById("qtip-launcher");
+const qtipWindow = document.getElementById("qtip-window");
+const closeBtn = document.getElementById("close-qtip");
+
 function scrollToBottom() {
   chat.scrollTop = chat.scrollHeight;
 }
 
-// Turns plain text into DOM nodes, making http(s) links clickable.
+// Open the Q-TIP window.
+function openQtip() {
+  qtipWindow.hidden = false;
+  launcher.setAttribute("aria-expanded", "true");
+
+  input.disabled = false;
+  sendBtn.disabled = false;
+  input.focus();
+
+  scrollToBottom();
+}
+
+// Close the Q-TIP window without clearing the conversation.
+function closeQtip() {
+  qtipWindow.hidden = true;
+  launcher.setAttribute("aria-expanded", "false");
+  launcher.focus();
+}
+
+launcher.addEventListener("click", () => {
+  if (qtipWindow.hidden) {
+    openQtip();
+  } else {
+    closeQtip();
+  }
+});
+
+closeBtn.addEventListener("click", closeQtip);
+
+// Allow the user to close the window with Escape.
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !qtipWindow.hidden) {
+    closeQtip();
+  }
+});
+
+// Turns plain text into DOM nodes, making URLs clickable.
 function fillBubble(el, text) {
   const urlPattern = /(https?:\/\/[^\s]+)/g;
 
@@ -26,8 +65,8 @@ function fillBubble(el, text) {
   });
 }
 
-// Creates a message bubble.
-function addMessage(role, text, intent) {
+// Create a chat message.
+function addMessage(role, text) {
   const wrap = document.createElement("div");
   wrap.className = `msg ${role}`;
 
@@ -41,25 +80,18 @@ function addMessage(role, text, intent) {
 
   wrap.append(who, bubble);
 
-  if (intent) {
-    const small = document.createElement("small");
-    small.className = "intent";
-    small.textContent = `Detected intent: ${intent}`;
-    wrap.appendChild(small);
-  }
-
   chat.appendChild(wrap);
   scrollToBottom();
 
   return { wrap, bubble };
 }
 
-// Displays the bot's response one word at a time.
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function typeMessage(bubble, text, delay = 65) {
+// Reveal the response one word at a time.
+async function typeMessage(bubble, text, delay = 40) {
   const words = text.match(/\S+\s*/g) || [];
 
   for (const word of words) {
@@ -69,6 +101,7 @@ async function typeMessage(bubble, text, delay = 65) {
   }
 }
 
+// Show the animated typing indicator.
 function addTyping() {
   const wrap = document.createElement("div");
   wrap.className = "msg bot";
@@ -94,29 +127,29 @@ function addTyping() {
 
 function setBusy(busy) {
   sendBtn.disabled = busy;
+  input.disabled = busy;
 }
 
+// Send the message to the existing Flask backend.
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const text = input.value.trim();
+
   if (!text || sendBtn.disabled) return;
 
   addMessage("user", text);
   input.value = "";
 
-  // Exit command.
+  // Local exit command.
   if (text.toLowerCase() === "exit") {
-    const { wrap, bubble } = addMessage(
-      "bot",
-      "",
-      null
-    );
+    const { bubble } = addMessage("bot", "");
 
+    setBusy(true);
     await typeMessage(
       bubble,
       "Goodbye! Good luck with your studies!",
-      65
+      40
     );
 
     input.disabled = true;
@@ -125,15 +158,15 @@ form.addEventListener("submit", async (event) => {
   }
 
   setBusy(true);
-  input.disabled = true;
-
   const typing = addTyping();
 
   try {
     const res = await fetch("/api/chat", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text }),
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: text })
     });
 
     if (!res.ok) {
@@ -142,19 +175,17 @@ form.addEventListener("submit", async (event) => {
 
     const data = await res.json();
 
-    // Replace the animated typing indicator with an empty response bubble.
     typing.remove();
 
-    const { bubble } = addMessage(
-      "bot",
-      "",
-      data.intent
+    const { bubble } = addMessage("bot", "");
+
+    await typeMessage(
+      bubble,
+      data.reply || "Sorry, I couldn't generate a response.",
+      40
     );
 
-    // Reveal the reply one word at a time.
-    await typeMessage(bubble, data.reply, 40);
-
-  } catch (err) {
+  } catch (error) {
     typing.remove();
 
     const { wrap } = addMessage(
@@ -164,9 +195,13 @@ form.addEventListener("submit", async (event) => {
 
     wrap.classList.add("error");
 
+    console.error("Q-TIP request failed:", error);
+
   } finally {
-    setBusy(false);
-    input.disabled = false;
-    input.focus();
+    // Keep the input disabled if the user issued exit.
+    if (text.toLowerCase() !== "exit") {
+      setBusy(false);
+      input.focus();
+    }
   }
 });
