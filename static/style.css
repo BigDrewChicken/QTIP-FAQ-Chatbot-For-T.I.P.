@@ -479,3 +479,36 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Quick question chips */
+.quick-replies {
+  align-self: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 100%;
+}
+
+.quick-reply {
+  padding: 8px 14px;
+
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6b4f00;
+
+  background: var(--white);
+  border: 1.5px solid var(--yellow);
+  border-radius: 999px;
+
+  cursor: pointer;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.quick-reply:hover {
+  background: var(--yellow-pale);
+}
+
+.quick-reply:active {
+  transform: scale(0.96);
+}

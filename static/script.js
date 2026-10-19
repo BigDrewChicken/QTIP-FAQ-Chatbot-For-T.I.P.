@@ -7,6 +7,8 @@ const launcher = document.getElementById("qtip-launcher");
 const qtipWindow = document.getElementById("qtip-window");
 const closeBtn = document.getElementById("close-qtip");
 
+const quickReplies = document.getElementById("quick-replies");
+
 function scrollToBottom() {
   chat.scrollTop = chat.scrollHeight;
 }
@@ -130,14 +132,20 @@ function setBusy(busy) {
   input.disabled = busy;
 }
 
-// Send the message to the existing Flask backend.
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
+// Remove the quick question chips (they only show before the first message).
+function removeQuickReplies() {
+  if (quickReplies && quickReplies.isConnected) {
+    quickReplies.remove();
+  }
+}
 
-  const text = input.value.trim();
+// Send a message to the Flask backend and show the reply.
+async function sendMessage(rawText) {
+  const text = rawText.trim();
 
   if (!text || sendBtn.disabled) return;
 
+  removeQuickReplies();
   addMessage("user", text);
   input.value = "";
 
@@ -198,10 +206,23 @@ form.addEventListener("submit", async (event) => {
     console.error("Q-TIP request failed:", error);
 
   } finally {
-    // Keep the input disabled if the user issued exit.
-    if (text.toLowerCase() !== "exit") {
-      setBusy(false);
-      input.focus();
-    }
+    setBusy(false);
+    input.focus();
   }
+}
+
+// Typed messages.
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  sendMessage(input.value);
 });
+
+// Quick question chips send their verified question directly.
+if (quickReplies) {
+  quickReplies.addEventListener("click", (event) => {
+    const chip = event.target.closest(".quick-reply");
+    if (!chip) return;
+
+    sendMessage(chip.dataset.question);
+  });
+}

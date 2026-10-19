@@ -1,6 +1,5 @@
 INTENT_RESPONSES = {
-    "GREETINGS": """Hello! Welcome to Q-TIP, your TIP assistant. How can I help you?
-    """,
+    "GREETINGS": """Hello! Welcome to Q-TIP, your TIP assistant. How can I help you?""",
 
     # ------------------------------------------------------------------
     # ADMISSION AND ENROLLMENT
