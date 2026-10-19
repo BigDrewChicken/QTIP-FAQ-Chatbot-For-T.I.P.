@@ -13,20 +13,21 @@ app = Flask(__name__, static_folder="static", static_url_path="/static")
 
 # Load trained intent classifier (once, at startup)
 model = joblib.load(os.path.join(BASE_DIR, "Q-TIP_Intent_Classifier.joblib"))
-THRESHOLD = 0.20
 
 
 def predict_intent(text):
     scores = model.decision_function([text])[0]
 
     predicted_index = np.argmax(scores)
-    predicted_tag = model.classes_[predicted_index]
+    predicted_intent = model.classes_[predicted_index]
     confidence = scores[predicted_index]
+
+    THRESHOLD = -0.2
 
     if confidence < THRESHOLD:
         return "UNKNOWN"
 
-    return predicted_tag
+    return predicted_intent
 
 
 @app.get("/")

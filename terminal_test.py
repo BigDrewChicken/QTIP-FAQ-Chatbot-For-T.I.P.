@@ -6,22 +6,20 @@ from replies import INTENT_RESPONSES
 # Load trained intent classifier
 model = joblib.load("Q-TIP_Intent_Classifier.joblib")
 
-# SVM decision-score threshold
-THRESHOLD = 0.20
-
 
 def predict_intent(text):
     scores = model.decision_function([text])[0]
 
     predicted_index = np.argmax(scores)
-    predicted_tag = model.classes_[predicted_index]
+    predicted_intent = model.classes_[predicted_index]
     confidence = scores[predicted_index]
 
-    # Reject uncertain predictions
+    THRESHOLD = -0.1
+
     if confidence < THRESHOLD:
         return "UNKNOWN"
 
-    return predicted_tag
+    return predicted_intent
 
 
 # Q-TIP APPLICATION
