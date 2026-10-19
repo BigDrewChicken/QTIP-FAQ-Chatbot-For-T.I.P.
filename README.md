@@ -50,9 +50,9 @@ An intent-classification chatbot that answers questions about enrollment, admiss
 
 ## About the Project
 
-**Q-TIP** ("Your TIP Assistant") is a web-based chatbot that helps prospective and current students get quick, accurate answers about TIP. Instead of searching through multiple pages, a student can type a question (or tap a quick question button) and get an answer right away.
+**Q-TIP** is a web-based chatbot that helps prospective and current students get quick, accurate answers about TIP. Instead of searching through multiple pages, a student can type a question (or tap a quick question button) and get an answer right away.
 
-Q-TIP began as a desktop app and was rebuilt as a Flask web application. It appears as a floating **Q** button on the page, which opens a chat window styled in TIP's black and yellow colors.
+Q-TIP began as a TUI app and was rebuilt as a Flask web application. It appears as a floating **Q** button on the page, which opens a chat window styled in TIP's black and yellow colors.
 
 ## Features
 
