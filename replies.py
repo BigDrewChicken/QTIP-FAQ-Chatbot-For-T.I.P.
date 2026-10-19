@@ -293,6 +293,6 @@ INTENT_RESPONSES = {
 
     "UNKNOWN": """
     Sorry, I can't quite understand your question.
-    Try asking about enrollment, tuition fees, payment methods, programs, accreditation, or TIP contact information.
+    Try asking about enrollment, tuition fees, payment methods, programs, accreditation, or TIP contact information. If you want to submit a ticket directly, please follow this link: https://crmlead-ui-mainhook.odoo.com/
     """
 }
