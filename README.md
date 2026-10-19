@@ -110,17 +110,24 @@ Student types a question
 Q-TIP/
 ├── static/
 │   ├── img/
-│   │   └── bg.png                       # Page background (TIP website mockup)
-│   ├── script.js                        # Chat widget logic and quick questions
-│   └── style.css                        # Black and yellow chat styling
-├── index.html                           # Chat page (see note below)
-├── app.py                               # Flask server: serves the page and /api/chat
-├── training.py                          # Trains the intent classifier from the dataset
-├── replies.py                           # Verified reply text for each intent
-├── terminal_test.py                     # Text-only chat loop for quick testing
-├── DATASET_QTIP.csv                     # Training data (example questions per intent)
-├── Q-TIP_Intent_Classifier.joblib       # The trained model
-├── requirements.txt                     # Python dependencies
+│   │   └── bg.png                        # Page background (TIP website mockup)
+│   ├── script.js                         # Chat widget logic and quick questions
+│   └── style.css                         # Black and yellow chat styling
+├── test_cases/
+│   ├── v1.0_test/
+│   │   ├── QTIP_Accuracy_By_Intent.csv   # Accuracy metrics grouped by intent
+│   │   ├── QTIP_Detailed_Test_Results.csv  # Detailed evaluation logs
+│   │   └── QTIP_Overall_Results.csv        # Summary of test case performance
+│   ├── display.py                        # Utility script to view/format test results
+│   └── model_test.py                     # Evaluates model performance against test cases
+├── index.html                            # Chat page (see note below)
+├── app.py                                # Flask server: serves the page and /api/chat
+├── training.py                           # Trains the intent classifier from the dataset
+├── replies.py                            # Verified reply text for each intent
+├── terminal_test.py                      # Text-only chat loop for quick testing
+├── DATASET_QTIP.csv                      # Training data (example questions per intent)
+├── Q-TIP_Intent_Classifier.joblib        # The trained model
+├── requirements.txt                      # Python dependencies
 ├── .gitignore
 ├── LICENSE
 └── README.md
